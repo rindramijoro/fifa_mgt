@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class ClubCRUDOperations  implements  CRUDOperations<Club>{
@@ -75,34 +76,32 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
         return clubs;
     }
 
-    public List<Club> findByPlayerName(String playerName) {
-        List<Club> clubs = new ArrayList<>();
+    public Club findByIdPlayer(UUID idPlayer) {
         String sql = """
-            SELECT c.club_name, c.acronyme, c.creation_date, c.stadium,
-                   co.coach_name, co.nationality,
+            SELECT c.id_club, c.club_name, c.acronyme, c.creation_date, c.stadium, c.coach,
+                   co.id_coach,co.coach_name, co.nationality,
                    p.player_name, p.jersey_number, p.position, p.nationality, p.age
             FROM club c
             JOIN player p ON c.id_club = p.club
-            JOIN coach co ON c.id_coach = co.id_coach
-            WHERE p.player_name ILIKE ?
+            JOIN coach co ON c.coach = co.id_coach
+            WHERE p.id_player = ?
             """;
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, playerName);
+            ps.setObject(1, idPlayer);
 
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    clubs.add(clubMapper.apply(rs));
+                if (rs.next()) {
+                    return clubMapper.apply(rs);
                 }
+                throw new RuntimeException("Could not find player " + idPlayer);
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving clubs for player: " + playerName, e);
+            throw new RuntimeException("Error retrieving clubs for player: " + idPlayer, e);
         }
-
-        return clubs;
     }
 
 }

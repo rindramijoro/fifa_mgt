@@ -1,5 +1,5 @@
 package com.mikaz.fifa.model;
 
 public enum Positions {
-    GOALKEEPER, DEFENDER, MIDDLEFIELDER, STRIKER
+    GOAL_KEEPER, DEFENDER, MIDDLEFIELDER, STRIKER
 }

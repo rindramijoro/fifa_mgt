@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -22,14 +23,12 @@ public class PlayerMapper implements Function<ResultSet, Player> {
     public Player apply(ResultSet resultSet) {
         try {
             Player player = new Player();
-            String playerName = resultSet.getString("player_name");
+            UUID idPlayer = resultSet.getObject("id_player",UUID.class);
 
-            Club club = clubCRUDOperations.findByPlayerName(playerName)
-                    .stream()
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("No club found for player: " + playerName));
+            Club club = clubCRUDOperations.findByIdPlayer(idPlayer);
 
-            player.setPlayerName(playerName);
+            player.setIdPlayer(resultSet.getString("id_player"));
+            player.setPlayerName(resultSet.getString("player_name"));
             player.setJerseyNumber(resultSet.getInt("jersey_number"));
             player.setAge(resultSet.getInt("age"));
             player.setPosition(Positions.valueOf(resultSet.getString("position")));

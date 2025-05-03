@@ -1,8 +1,5 @@
 package com.mikaz.fifa.model;
 
-import lombok.Data;
-
-@Data
 public class Player {
     private String idPlayer;
     private String playerName;
@@ -11,6 +8,46 @@ public class Player {
     private Positions position;
     private String nationality;
     private Club club;
+
+    public Player(String idPlayer, String playerName, Integer jerseyNumber, Integer age, Positions position, String nationality, Club club) {
+        this.idPlayer = idPlayer;
+        this.playerName = playerName;
+        this.jerseyNumber = jerseyNumber;
+        this.age = age;
+        this.position = position;
+        this.nationality = nationality;
+        this.club = club;
+    }
+
+    public Player() {}
+
+    public String getIdPlayer() {
+        return idPlayer;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public Integer getJerseyNumber() {
+        return jerseyNumber;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public Positions getPosition() {
+        return position;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public Club getClub() {
+        return club;
+    }
 
     public void setIdPlayer(String idPlayer) {
         this.idPlayer = idPlayer;
