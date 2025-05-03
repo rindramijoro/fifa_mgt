@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class CoachCRUDOperations implements CRUDOperations <Coach>{
@@ -22,12 +23,12 @@ public class CoachCRUDOperations implements CRUDOperations <Coach>{
         this.coachMapper = coachMapper;
     }
 
-    public Coach findByIdCoach(String idCoach) {
-        String sql = "SELECT coach_name, nationality FROM coach WHERE id_coach = ?";
+    public Coach findByIdCoach(UUID idCoach) {
+        String sql = "SELECT id_coach, coach_name, nationality FROM coach WHERE id_coach = ?";
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, idCoach);
+            preparedStatement.setObject(1, idCoach);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {

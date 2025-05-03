@@ -16,9 +16,8 @@ public class CoachMapper implements Function<ResultSet, Coach> {
     public Coach apply(ResultSet resultSet) {
         try {
             Coach coach = new Coach();
-            String idCoach = resultSet.getString("id_coach");
 
-            coach.setIdCoach(idCoach);
+            coach.setIdCoach(resultSet.getString("id_coach"));
             coach.setCoachName(resultSet.getString("coach_name"));
             coach.setNationality(resultSet.getString("nationality"));
 

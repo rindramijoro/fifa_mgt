@@ -24,7 +24,28 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
 
     @Override
     public List<Club> getAll(Integer page,Integer size) {
-        return List.of();
+        int defaultPage = (page != null) ? page : 1;
+        int defaultSize = (size != null) ? size : 10;
+
+        List<Club> clubs = new ArrayList<>();
+        String sql = """
+                select c.id_club, c.club_name, c.acronyme, c.creation_date,c.stadium,
+                c.coach,co.id_coach, co.coach_name, co.nationality 
+                from club c join coach co on c.coach = co.id_coach  limit ? offset ?
+                """;
+        try (Connection conn = dbConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);)
+        {
+            ps.setInt(1,defaultSize);
+            ps.setInt(2,(defaultPage - 1) * defaultSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                clubs.add(clubMapper.apply(rs));
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return clubs;
     }
 
     public List<Club> findClubByName(String clubName) {
