@@ -9,16 +9,14 @@ public class Club {
     private Coach coach;
     private Integer creationDate;
     private String stadium;
-    private Championship championship;
 
-    public Club(String idClub, String clubName, String acronyme, Coach coach, Integer creationDate, String stadium, Championship championship) {
+    public Club(String idClub, String clubName, String acronyme, Coach coach, Integer creationDate, String stadium) {
         this.idClub = idClub;
         this.clubName = clubName;
         this.acronyme = acronyme;
         this.coach = coach;
         this.creationDate = creationDate;
         this.stadium = stadium;
-        this.championship = championship;
     }
 
     public Club() {}
@@ -47,10 +45,6 @@ public class Club {
         return stadium;
     }
 
-    public Championship getChampionship() {
-        return championship;
-    }
-
     public void setIdClub(String idClub) {
         this.idClub = idClub;
     }
@@ -75,7 +69,4 @@ public class Club {
         this.stadium = stadium;
     }
 
-    public void setChampionship(Championship championship) {
-        this.championship = championship;
-    }
 }
