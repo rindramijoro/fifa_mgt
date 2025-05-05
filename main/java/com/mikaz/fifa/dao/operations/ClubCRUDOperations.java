@@ -104,5 +104,11 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
         }
     }
 
+    @Override
+    public List<Club> saveAll(List<Club> entities) {
+        return List.of();
+    }
+
+
 }
 

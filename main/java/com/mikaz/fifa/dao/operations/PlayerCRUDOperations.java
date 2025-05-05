@@ -2,7 +2,9 @@ package com.mikaz.fifa.dao.operations;
 
 import com.mikaz.fifa.dao.DbConnection;
 import com.mikaz.fifa.dao.mapper.PlayerMapper;
+import com.mikaz.fifa.model.Club;
 import com.mikaz.fifa.model.Player;
+import com.mikaz.fifa.model.Positions;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -68,5 +70,37 @@ public class PlayerCRUDOperations implements CRUDOperations<Player> {
             throw new RuntimeException(e);
         }
         return players;
+    }
+
+    @Override
+    public List<Player> saveAll(List<Player> entities) {
+       /* String sql = """
+                insert into player(player_name, jersey_number, age, position, nationality)
+                values(?,?,?,?,?)
+                """;
+        List<Player> players = new ArrayList<>();
+        try(Connection conn = dbConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            for(Player p : entities){
+                ps.setString(1,p.getPlayerName());
+                ps.setInt(2,p.getJerseyNumber());
+                ps.setInt(3,p.getAge());
+                ps.setString(4,p.getPosition());
+                ps.setString(5, p.getNationality());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                while (rs.next()) {
+                    players.add(playerMapper.apply(rs));
+                }
+            }catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return players;*/
+        return List.of();
     }
 }

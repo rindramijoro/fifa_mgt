@@ -63,4 +63,9 @@ public class CoachCRUDOperations implements CRUDOperations <Coach>{
         }
         return coaches;
     }
+
+    @Override
+    public List<Coach> saveAll(List<Coach> entities) {
+        return List.of();
+    }
 }
