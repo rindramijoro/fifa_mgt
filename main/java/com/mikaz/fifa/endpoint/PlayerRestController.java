@@ -1,11 +1,12 @@
 package com.mikaz.fifa.endpoint;
 
+import com.mikaz.fifa.endpoint.rest.CreatePlayer;
+import com.mikaz.fifa.model.Player;
 import com.mikaz.fifa.service.PlayerService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PlayerRestController {
@@ -21,5 +22,19 @@ public class PlayerRestController {
             @RequestParam(required = false, defaultValue = "10") int size
     ){
         return ResponseEntity.ok(playerService.getAllPlayers(page,size));
+    }
+
+    @PutMapping("/players")
+    public ResponseEntity<Object> createOrUpdatePlayer(@RequestBody CreatePlayer playerToCreate){
+        Player createdPlayer = playerService.addPlayer(
+                playerToCreate.getIdPlayer(),
+                playerToCreate.getPlayerName(),
+                playerToCreate.getJerseyNumber(),
+                playerToCreate.getAge(),
+                playerToCreate.getPosition(),
+                playerToCreate.getNationality()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(createdPlayer);
     }
 }

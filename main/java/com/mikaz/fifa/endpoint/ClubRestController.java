@@ -23,7 +23,7 @@ public class ClubRestController {
         return ResponseEntity.ok(clubService.getAllClubs(page, size));
     }
 
-    @PutMapping("/club")
+    @PutMapping("/clubs")
     public ResponseEntity<Object> createOrUpdateClub(@RequestBody CreateClub clubToCreate){
         Club createdClub = clubService.addClub(
                 clubToCreate.getClubName(),

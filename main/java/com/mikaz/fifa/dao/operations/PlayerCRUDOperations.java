@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class PlayerCRUDOperations implements CRUDOperations<Player> {
@@ -25,7 +26,7 @@ public class PlayerCRUDOperations implements CRUDOperations<Player> {
     }
 
     public Player findById(String idPlayer) {
-        String sql = "SELECT player_name, jersey_number, age, position, nationality, club FROM player WHERE id_player = ?";
+        String sql = "SELECT id_player, player_name, jersey_number, age, position, nationality, club FROM player WHERE id_player = ?";
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -74,22 +75,25 @@ public class PlayerCRUDOperations implements CRUDOperations<Player> {
 
     @Override
     public List<Player> saveAll(List<Player> entities) {
-      /* String sql = """
-                insert into player(player_name, jersey_number, age, position, nationality)
-                values(?,?,?,?,?) 
-                on conflict(player_name,jersey_number,age,position,nationality)     
-                do update set player
+       String sql = """
+                insert into player(id_player,player_name, jersey_number, age, position, nationality)
+                values(?,?,?,?,?,?) 
+                on conflict(id_player)     
+                do update set player_name = excluded.player_name,jersey_number=excluded.jersey_number,
+                age=excluded.age,position=excluded.position,nationality=excluded.nationality
+                returning id_player, player_name, jersey_number, age, position, nationality
 
                 """;
        List<Player> players = new ArrayList<>();
         try(Connection conn = dbConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
-            for(Player p : entities){
-                ps.setString(1,p.getPlayerName());
-                ps.setInt(2,p.getJerseyNumber());
-                ps.setInt(3,p.getAge());
-                ps.setString(4,p.getPosition());
-                ps.setString(5, p.getNationality());
+            for(Player player : entities){
+                ps.setObject(1, UUID.fromString(player.getIdPlayer()));
+                ps.setString(2,player.getPlayerName());
+                ps.setInt(3,player.getJerseyNumber());
+                ps.setInt(4,player.getAge());
+                ps.setObject(5, player.getPosition(), java.sql.Types.OTHER);
+                ps.setString(6, player.getNationality());
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -103,7 +107,6 @@ public class PlayerCRUDOperations implements CRUDOperations<Player> {
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return players;*/
-        return List.of();
+        return players;
     }
 }
