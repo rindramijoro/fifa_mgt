@@ -10,9 +10,7 @@ public class Club {
     private Integer creationDate;
     private String stadium;
 
-    public Club(String idClub, String clubName, String acronyme, Coach coach, Integer creationDate, String stadium) {
-        this.idClub = idClub;
-        this.clubName = clubName;
+    public Club(String acronyme, Coach coach, Integer creationDate, String stadium) {
         this.acronyme = acronyme;
         this.coach = coach;
         this.creationDate = creationDate;
@@ -20,6 +18,7 @@ public class Club {
     }
 
     public Club() {}
+
 
     public String getIdClub() {
         return idClub;

@@ -5,10 +5,7 @@ import com.mikaz.fifa.dao.mapper.ClubMapper;
 import com.mikaz.fifa.model.Club;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -49,12 +46,11 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
         return clubs;
     }
 
-    public List<Club> findClubByName(String clubName) {
-        List<Club> clubs = new ArrayList<>();
+    public Club findClubByName(String clubName) {
         String sql = """
-            SELECT c.club_name, c.acronyme, c.creation_date, c.stadium, co.coach_name
+            SELECT c.id_club ,c.club_name, c.acronyme,c.coach, c.creation_date, c.stadium,co.id_coach, co.coach_name
             FROM club c
-            JOIN coach co ON c.coach_id = co.coach_id
+            JOIN coach co ON c.coach = co.id_coach
             WHERE c.club_name ILIKE ?
             """;
 
@@ -64,16 +60,15 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
             ps.setString(1, clubName);
 
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    clubs.add(clubMapper.apply(rs));
+                if (rs.next()) {
+                    return clubMapper.apply(rs);
                 }
+                throw new RuntimeException("Could not find club " + clubName);
             }
 
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving clubs by name: " + clubName, e);
         }
-
-        return clubs;
     }
 
     public Club findByIdPlayer(UUID idPlayer) {
@@ -106,7 +101,43 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
 
     @Override
     public List<Club> saveAll(List<Club> entities) {
-        return List.of();
+        String sql = """
+                insert into club(club_name, acronyme, coach,creation_date, stadium)
+                values(?, ?, ?, ?,?)
+                on conflict (club_name)
+                do update set club_name=excluded.club_name, acronyme=excluded.acronyme, coach= excluded.coach,stadium=excluded.stadium
+                returning club_name, acronyme,coach,creation_date, stadium
+                """;
+        List<Club> clubs = new ArrayList<>();
+        try(Connection conn = dbConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
+        {
+            for(Club club : entities){
+                if (club.getCoach() == null) {
+                    throw new IllegalArgumentException("Coach is missing for club: " + club.getClubName());
+                }
+                String coachId = club.getCoach().getIdCoach();
+                if (coachId == null || coachId.isEmpty()) {
+                    throw new IllegalArgumentException("Coach ID is missing for club: " + club.getClubName());
+                }
+                ps.setString(1,club.getClubName());
+                ps.setString(2,club.getAcronyme());
+                ps.setObject(3,UUID.fromString(coachId));
+                ps.setInt(4,club.getCreationDate());
+                ps.setString(5, club.getStadium());
+                ps.addBatch();
+            }
+            ps.executeQuery();
+
+            try(ResultSet rs = ps.getGeneratedKeys()){
+                while(rs.next()){
+                    clubs.add(clubMapper.apply(rs));
+                }
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return clubs;
     }
 
 

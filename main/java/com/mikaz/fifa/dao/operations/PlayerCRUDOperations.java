@@ -74,11 +74,14 @@ public class PlayerCRUDOperations implements CRUDOperations<Player> {
 
     @Override
     public List<Player> saveAll(List<Player> entities) {
-       /* String sql = """
+      /* String sql = """
                 insert into player(player_name, jersey_number, age, position, nationality)
-                values(?,?,?,?,?)
+                values(?,?,?,?,?) 
+                on conflict(player_name,jersey_number,age,position,nationality)     
+                do update set player
+
                 """;
-        List<Player> players = new ArrayList<>();
+       List<Player> players = new ArrayList<>();
         try(Connection conn = dbConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             for(Player p : entities){
