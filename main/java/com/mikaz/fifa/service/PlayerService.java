@@ -15,7 +15,7 @@ public class PlayerService {
         this.playerCRUDOperations = playerCRUDOperations;
     }
 
-    public List<Player> getAllPlayers(Integer ageMin, Integer ageMax,int page, int size) {
+    public List<Player> getAllPlayers(Integer ageMin, Integer ageMax,String playerName, String clubName,int page, int size) {
         if(ageMin != null && ageMax != null && ageMin > ageMax) {
             throw new IllegalArgumentException("ageMax must be greater than ageMin");
         }
@@ -36,6 +36,13 @@ public class PlayerService {
                     }
                     if(ageMax != null) {
                         return age <= ageMin;
+                    }
+
+                    if(playerName != null && !player.getPlayerName().toLowerCase().contains(playerName.toLowerCase())) {
+                        return false;
+                    }
+                    if(clubName != null && !player.getClub().getClubName().toLowerCase().contains(clubName.toLowerCase())) {
+                        return false;
                     }
                     return true;
                 }).toList();
