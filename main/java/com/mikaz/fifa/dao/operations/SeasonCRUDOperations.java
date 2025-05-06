@@ -6,10 +6,7 @@ import com.mikaz.fifa.dao.mapper.SeasonMapper;
 import com.mikaz.fifa.model.Season;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +44,33 @@ public class SeasonCRUDOperations implements CRUDOperations<Season> {
     }
 
     @Override
-    public List<Season> saveAll(List entities) {
-        return List.of();
+    public List<Season> saveAll(List<Season> entities) {
+        String sql = """
+                insert into season(season_start, alias)
+                values (?,?)
+                """;
+        List<Season> seasons = new ArrayList<>();
+        try(Connection conn = dbConnection.getConnection();
+           PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+            for(Season season : entities){
+                ps.setInt(1,season.getSeasonStart());
+                ps.setString(2,season.getAlias());
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+
+            try(ResultSet rs = ps.getGeneratedKeys()){
+                while(rs.next()){
+                    seasons.add(seasonMapper.apply(rs));
+                }
+            }catch(SQLException e){
+                throw new RuntimeException(e);
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+
+        return seasons;
     }
 }

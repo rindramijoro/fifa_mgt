@@ -17,4 +17,8 @@ public class SeasonService {
     public List<Season> getAllSeasons(int page, int size){
         return seasonCRUDOperations.getAll(page, size);
     }
+
+    public List<Season> saveAll(List<Season> seasons){
+        return seasonCRUDOperations.saveAll(seasons);
+    }
 }

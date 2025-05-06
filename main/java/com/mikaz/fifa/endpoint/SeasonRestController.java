@@ -1,10 +1,13 @@
 package com.mikaz.fifa.endpoint;
 
+import com.mikaz.fifa.endpoint.rest.CreateSeason;
+import com.mikaz.fifa.model.Season;
 import com.mikaz.fifa.service.SeasonService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class SeasonRestController {
@@ -21,4 +24,16 @@ public class SeasonRestController {
     ) {
         return ResponseEntity.ok(seasonService.getAllSeasons(page, size));
     }
+
+    @PostMapping("/seasons")
+    public ResponseEntity<Object> createSeason(@RequestBody CreateSeason seasonToCreate) {
+        Season season = new Season();
+        season.setSeasonStart(seasonToCreate.getSeasonStart());
+        season.setAlias(seasonToCreate.getAlias());
+
+        List<Season> savedSeasons = seasonService.saveAll(List.of(season));
+
+        return new ResponseEntity<>(savedSeasons.get(0), HttpStatus.CREATED);
+    }
 }
+
