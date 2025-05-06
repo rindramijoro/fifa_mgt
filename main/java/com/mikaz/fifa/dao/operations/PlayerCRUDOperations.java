@@ -3,6 +3,8 @@ package com.mikaz.fifa.dao.operations;
 import com.mikaz.fifa.dao.DbConnection;
 import com.mikaz.fifa.dao.mapper.PlayerMapper;
 import com.mikaz.fifa.model.Player;
+import com.mikaz.fifa.model.Season;
+import com.mikaz.fifa.model.Status;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -106,5 +108,10 @@ public class PlayerCRUDOperations implements CRUDOperations<Player> {
             throw new RuntimeException(e);
         }
         return players;
+    }
+
+    @Override
+    public Season updateStatus(Integer seasonStart, Status newStatus) {
+        return null;
     }
 }

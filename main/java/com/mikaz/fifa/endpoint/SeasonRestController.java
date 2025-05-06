@@ -1,6 +1,7 @@
 package com.mikaz.fifa.endpoint;
 
 import com.mikaz.fifa.endpoint.rest.CreateSeason;
+import com.mikaz.fifa.endpoint.rest.UpdateSeasonStatus;
 import com.mikaz.fifa.model.Season;
 import com.mikaz.fifa.service.SeasonService;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,15 @@ public class SeasonRestController {
 
         List<Season> allSeasons = seasonService.saveAll(seasons);
         return new ResponseEntity<>(allSeasons, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/seasons/{seasonStart}/status")
+    public ResponseEntity<Object> updateSeasonStatus(
+            @PathVariable Integer seasonStart,
+            @RequestBody UpdateSeasonStatus seasonStatus
+    ){
+        Season updated = seasonService.updateSeasonStatus(seasonStart,seasonStatus.getSeasonStatus());
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 }
 

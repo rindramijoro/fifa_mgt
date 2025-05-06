@@ -2,6 +2,7 @@ package com.mikaz.fifa.service;
 
 import com.mikaz.fifa.dao.operations.SeasonCRUDOperations;
 import com.mikaz.fifa.model.Season;
+import com.mikaz.fifa.model.Status;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,5 +21,9 @@ public class SeasonService {
 
     public List<Season> saveAll(List<Season> seasons){
         return seasonCRUDOperations.saveAll(seasons);
+    }
+
+    public Season updateSeasonStatus(Integer seasonStart, Status newStatus){
+        return seasonCRUDOperations.updateStatus(seasonStart,newStatus);
     }
 }
