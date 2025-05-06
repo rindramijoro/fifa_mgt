@@ -152,7 +152,7 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
                 ps.setString(5, club.getStadium());
                 ps.addBatch();
             }
-            ps.executeQuery();
+            ps.executeUpdate();
 
             try(ResultSet rs = ps.getGeneratedKeys()){
                 while(rs.next()){

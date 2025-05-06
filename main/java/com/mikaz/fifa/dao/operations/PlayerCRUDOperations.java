@@ -28,7 +28,7 @@ public class PlayerCRUDOperations implements CRUDOperations<Player> {
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setString(1, idPlayer);
+            ps.setObject(1, UUID.fromString(idPlayer));
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

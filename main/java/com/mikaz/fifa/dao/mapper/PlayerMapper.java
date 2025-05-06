@@ -25,7 +25,12 @@ public class PlayerMapper implements Function<ResultSet, Player> {
             Player player = new Player();
             UUID idPlayer = resultSet.getObject("id_player",UUID.class);
 
-            Club club = clubCRUDOperations.findByIdPlayer(idPlayer);
+            Club club = null;
+            try {
+                club = clubCRUDOperations.findByIdPlayer(idPlayer);
+            }catch (Exception e){
+                System.err.println("Warning: No club found for player with ID " + idPlayer + ". Reason: " + e.getMessage());
+            }
 
             player.setIdPlayer(resultSet.getString("id_player"));
             player.setPlayerName(resultSet.getString("player_name"));

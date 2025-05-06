@@ -29,9 +29,10 @@ public class ClubMapper implements Function<ResultSet, Club> {
             club.setIdClub(resultSet.getString("id_club"));
             club.setClubName(resultSet.getString("club_name"));
             club.setAcronyme(resultSet.getString("acronyme"));
+            club.setCoach(coach);
             club.setCreationDate(resultSet.getInt("creation_date"));
             club.setStadium(resultSet.getString("stadium"));
-            club.setCoach(coach);
+
             return club;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to map ResultSet to Club", e);

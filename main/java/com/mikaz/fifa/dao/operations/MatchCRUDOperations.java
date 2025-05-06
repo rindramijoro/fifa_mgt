@@ -3,7 +3,6 @@ package com.mikaz.fifa.dao.operations;
 import com.mikaz.fifa.dao.DbConnection;
 import com.mikaz.fifa.dao.mapper.MatchMapper;
 import com.mikaz.fifa.model.Match;
-import com.mikaz.fifa.model.Season;
 import com.mikaz.fifa.model.Status;
 import com.mikaz.fifa.service.exceptions.NotFoundException;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class MatchCRUDOperations implements CRUDOperations {
+public class MatchCRUDOperations implements CRUDOperations <Match>{
     private final DbConnection dbConnection;
     private final MatchMapper matchMapper;
 
