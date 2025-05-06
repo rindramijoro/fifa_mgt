@@ -3,8 +3,6 @@ package com.mikaz.fifa.dao.operations;
 import com.mikaz.fifa.dao.DbConnection;
 import com.mikaz.fifa.dao.mapper.ClubMapper;
 import com.mikaz.fifa.model.Club;
-import com.mikaz.fifa.model.Season;
-import com.mikaz.fifa.model.Status;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -166,12 +164,5 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
         }
         return clubs;
     }
-
-    @Override
-    public Season updateStatus(Integer seasonStart, Status newStatus) {
-        return null;
-    }
-
-
 }
 

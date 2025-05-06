@@ -76,7 +76,6 @@ public class SeasonCRUDOperations implements CRUDOperations<Season> {
         return getAll(1,Integer.MAX_VALUE);
     }
 
-    @Override
     public Season updateStatus(Integer seasonStart, Status newStatus){
         String selectSql = "select id_season, season_start, alias, season_status from season where season_start=?";
         String updateSql = "update season set season_status=? where season_start=?";
