@@ -1,0 +1,1 @@
+create type duration as enum ('HOUR', 'MINUTES', 'SECONDS');

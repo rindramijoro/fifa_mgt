@@ -1,0 +1,1 @@
+create type status as enum ('NOT_STARTED', 'STARTED', 'FINISHED');

@@ -1,0 +1,6 @@
+CREATE TYPE positions AS ENUM (
+    'GOAL_KEEPER',
+    'DEFENDER',
+    'MIDDLEFIELDER',
+    'STRIKER'
+);
