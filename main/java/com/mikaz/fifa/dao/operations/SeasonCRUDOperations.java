@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class SeasonCRUDOperations implements CRUDOperations<Season> {
@@ -112,5 +113,26 @@ public class SeasonCRUDOperations implements CRUDOperations<Season> {
         }
 
         return null;
+    }
+
+    public Season findByIdSeason(UUID idSeason){
+        String sql = """
+                select id_season, season_start, alias, season_status 
+                from season where id_season = ?
+                """;
+        try(Connection conn = dbConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setObject(1,idSeason);
+
+            try (ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
+                    return seasonMapper.apply(rs);
+                }
+                throw new NotFoundException("Season not found");
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 }

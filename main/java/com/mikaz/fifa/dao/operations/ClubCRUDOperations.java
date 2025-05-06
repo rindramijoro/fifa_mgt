@@ -73,6 +73,31 @@ public class ClubCRUDOperations  implements  CRUDOperations<Club>{
         }
     }
 
+    public Club findClubByIdClub(UUID idClub) {
+        String sql = """
+            SELECT c.id_club ,c.club_name, c.acronyme,c.coach, c.creation_date, c.stadium,co.id_coach, co.coach_name
+            FROM club c
+            JOIN coach co ON c.coach = co.id_coach
+            WHERE c.id_club = ?
+            """;
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setObject(1, idClub);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return clubMapper.apply(rs);
+                }
+                throw new RuntimeException("Could not find club " + idClub);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving clubs by name: " + idClub, e);
+        }
+    }
+
     public Club findByIdPlayer(UUID idPlayer) {
         String sql = """
             SELECT c.id_club, c.club_name, c.acronyme, c.creation_date, c.stadium, c.coach,
