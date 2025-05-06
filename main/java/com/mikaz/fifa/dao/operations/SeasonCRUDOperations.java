@@ -1,7 +1,6 @@
 package com.mikaz.fifa.dao.operations;
 
 import com.mikaz.fifa.dao.DbConnection;
-import com.mikaz.fifa.dao.mapper.CoachMapper;
 import com.mikaz.fifa.dao.mapper.SeasonMapper;
 import com.mikaz.fifa.model.Season;
 import org.springframework.stereotype.Repository;
@@ -71,6 +70,6 @@ public class SeasonCRUDOperations implements CRUDOperations<Season> {
             throw new RuntimeException(e);
         }
 
-        return seasons;
+        return getAll(1,Integer.MAX_VALUE);
     }
 }

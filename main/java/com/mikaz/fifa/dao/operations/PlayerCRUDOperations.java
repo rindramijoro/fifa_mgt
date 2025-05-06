@@ -2,9 +2,7 @@ package com.mikaz.fifa.dao.operations;
 
 import com.mikaz.fifa.dao.DbConnection;
 import com.mikaz.fifa.dao.mapper.PlayerMapper;
-import com.mikaz.fifa.model.Club;
 import com.mikaz.fifa.model.Player;
-import com.mikaz.fifa.model.Positions;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;

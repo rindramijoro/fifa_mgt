@@ -26,14 +26,16 @@ public class SeasonRestController {
     }
 
     @PostMapping("/seasons")
-    public ResponseEntity<Object> createSeason(@RequestBody CreateSeason seasonToCreate) {
-        Season season = new Season();
-        season.setSeasonStart(seasonToCreate.getSeasonStart());
-        season.setAlias(seasonToCreate.getAlias());
+    public ResponseEntity<Object> createSeason(@RequestBody List<CreateSeason> seasonsToCreate) {
+        List<Season> seasons = seasonsToCreate.stream().map(season ->{
+            Season newSeason = new Season();
+            newSeason.setSeasonStart(season.getSeasonStart());
+            newSeason.setAlias(season.getAlias());
+            return newSeason;
+        }).toList();
 
-        List<Season> savedSeasons = seasonService.saveAll(List.of(season));
-
-        return new ResponseEntity<>(savedSeasons.get(0), HttpStatus.CREATED);
+        List<Season> allSeasons = seasonService.saveAll(seasons);
+        return new ResponseEntity<>(allSeasons, HttpStatus.CREATED);
     }
 }
 
