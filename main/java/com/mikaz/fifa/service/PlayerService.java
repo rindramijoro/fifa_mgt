@@ -15,8 +15,30 @@ public class PlayerService {
         this.playerCRUDOperations = playerCRUDOperations;
     }
 
-    public List<Player> getAllPlayers(int page, int size) {
-        return playerCRUDOperations.getAll(page,size);
+    public List<Player> getAllPlayers(Integer ageMin, Integer ageMax,int page, int size) {
+        if(ageMin != null && ageMax != null && ageMin > ageMax) {
+            throw new IllegalArgumentException("ageMax must be greater than ageMin");
+        }
+        if(ageMin != null && ageMin < 15) {
+            throw new IllegalArgumentException("ageMin must be greater than 15");
+        }
+
+        List<Player> players = playerCRUDOperations.getAll(page,size);
+
+        return players.stream()
+                .filter(player -> {
+                    Integer age = player.getAge();
+                    if(ageMin != null && ageMax != null) {
+                        return age >= ageMin && age <= ageMax;
+                    }
+                    if (ageMin != null) {
+                        return age >= ageMin;
+                    }
+                    if(ageMax != null) {
+                        return age <= ageMin;
+                    }
+                    return true;
+                }).toList();
     }
 
     public Player addPlayer(String idPlayer, String playerName, Integer jerseyNumber, Integer age, Positions position, String nationality){

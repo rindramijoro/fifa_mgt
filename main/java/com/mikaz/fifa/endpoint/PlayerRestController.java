@@ -19,9 +19,11 @@ public class PlayerRestController {
     @GetMapping("/players")
     public ResponseEntity<Object> getPlayers(
             @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "10") int size
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false) Integer ageMin,
+            @RequestParam(required = false) Integer ageMax
     ){
-        return ResponseEntity.ok(playerService.getAllPlayers(page,size));
+        return ResponseEntity.ok(playerService.getAllPlayers(ageMin,ageMax,page,size));
     }
 
     @PutMapping("/players")
