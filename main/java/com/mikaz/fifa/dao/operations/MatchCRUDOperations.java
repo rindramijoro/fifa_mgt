@@ -112,7 +112,6 @@ public class MatchCRUDOperations implements CRUDOperations <Match>{
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement psSeason = conn.prepareStatement(getSeasonSql)) {
 
-            // Step 1: Get season and create Season object
             psSeason.setInt(1, seasonStart);
             ResultSet rsSeason = psSeason.executeQuery();
             if (!rsSeason.next()) {
@@ -121,26 +120,23 @@ public class MatchCRUDOperations implements CRUDOperations <Match>{
 
             UUID seasonId = UUID.fromString(rsSeason.getString("id_season"));
             String seasonStatus = rsSeason.getString("season_status");
-            Season season = new Season(seasonId.toString(), seasonStart, seasonStatus); // Ensure Season constructor matches
+            Season season = new Season(seasonId.toString(), seasonStart, seasonStatus);
 
             if (!"STARTED".equalsIgnoreCase(seasonStatus)) {
                 throw new ClientException("Season must be in STARTED status.");
             }
 
-            // Step 2: Check existing matches
             List<Match> existingMatches = getBySeasonYear(seasonStart);
             if (!existingMatches.isEmpty()) {
                 return existingMatches;
             }
 
-            // Step 3: Fetch clubs
             List<Club> clubs = clubCRUDOperations.getAll(1, 10);
             if (clubs.size() < 2) {
                 throw new ClientException("At least 2 clubs are needed.");
             }
 
-            // Step 4: Generate matches
-            AtomicInteger dayOffset = new AtomicInteger(0); // Thread-safe day increment
+            AtomicInteger dayOffset = new AtomicInteger(0);
             matches = clubs.stream()
                     .flatMap(home -> clubs.stream()
                             .filter(away -> !home.getIdClub().equals(away.getIdClub()))
