@@ -30,4 +30,9 @@ public class MatchRestController {
         Match updated = matchService.updateMatchStatus(idMatch, matchStatus.getMatchStatus());
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
+
+    @PostMapping("/matches/{seasonStart}")
+    public ResponseEntity<Object> createMatch(@PathVariable Integer seasonStart) {
+        return ResponseEntity.ok(matchService.matchMaker(seasonStart));
+    }
 }

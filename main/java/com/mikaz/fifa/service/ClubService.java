@@ -19,9 +19,10 @@ public class ClubService {
         return clubCRUDOperations.getAll(page,size);
     }
 
-    public Club addClub(String clubName, String acronyme, Coach coach, Integer creationDate, String stadium){
+    public Club addClub(String idClub,String clubName, String acronyme, Coach coach, Integer creationDate, String stadium){
         Club club = new Club();
 
+        club.setIdClub(idClub);
         club.setClubName(clubName);
         club.setAcronyme(acronyme);
         club.setCoach(coach);

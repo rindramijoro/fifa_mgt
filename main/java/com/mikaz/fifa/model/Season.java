@@ -15,6 +15,9 @@ public class Season {
 
     public Season() {}
 
+    public Season(String string, Integer seasonStart, String seasonStatus) {
+    }
+
     public String getIdSeason() {
         return idSeason;
     }

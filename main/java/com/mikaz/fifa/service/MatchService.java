@@ -23,4 +23,8 @@ public class MatchService {
     public Match updateMatchStatus(UUID idMatch, Status newStatus){
         return matchCRUDOperations.updateStatus(idMatch, newStatus);
     }
+
+    public List<Match> matchMaker(Integer seasonStart){
+        return matchCRUDOperations.generateMatchesForSeason(seasonStart);
+    }
 }

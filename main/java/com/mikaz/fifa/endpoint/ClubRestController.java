@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class ClubRestController {
     private final ClubService clubService;
@@ -24,16 +27,22 @@ public class ClubRestController {
     }
 
     @PutMapping("/clubs")
-    public ResponseEntity<Object> createOrUpdateClub(@RequestBody CreateClub clubToCreate){
-        Club createdClub = clubService.addClub(
-                clubToCreate.getClubName(),
-                clubToCreate.getAcronyme(),
-                clubToCreate.getCoach(),
-                clubToCreate.getCreationDate(),
-                clubToCreate.getStadium()
-        );
+    public ResponseEntity<Object> createOrUpdateClubs(@RequestBody List<CreateClub> clubsToCreate) {
+        List<Club> createdClubs = new ArrayList<>();
 
-        return ResponseEntity.status(HttpStatus.OK).body(createdClub);
+        for (CreateClub clubToCreate : clubsToCreate) {
+            Club createdClub = clubService.addClub(
+                    clubToCreate.getIdClub(),
+                    clubToCreate.getClubName(),
+                    clubToCreate.getAcronyme(),
+                    clubToCreate.getCoach(),
+                    clubToCreate.getCreationDate(),
+                    clubToCreate.getStadium()
+            );
+            createdClubs.add(createdClub);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(createdClubs);
     }
 }
 

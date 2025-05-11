@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class PlayerRestController {
     private final PlayerService playerService;
@@ -28,16 +31,21 @@ public class PlayerRestController {
     }
 
     @PutMapping("/players")
-    public ResponseEntity<Object> createOrUpdatePlayer(@RequestBody CreatePlayer playerToCreate){
-        Player createdPlayer = playerService.addPlayer(
-                playerToCreate.getIdPlayer(),
-                playerToCreate.getPlayerName(),
-                playerToCreate.getJerseyNumber(),
-                playerToCreate.getAge(),
-                playerToCreate.getPosition(),
-                playerToCreate.getNationality()
-        );
+    public ResponseEntity<Object> createOrUpdatePlayers(@RequestBody List<CreatePlayer> playersToCreate) {
+        List<Player> createdPlayers = new ArrayList<>();
 
-        return ResponseEntity.status(HttpStatus.OK).body(createdPlayer);
+        for (CreatePlayer player : playersToCreate) {
+            Player createdPlayer = playerService.addPlayer(
+                    player.getIdPlayer(),
+                    player.getPlayerName(),
+                    player.getJerseyNumber(),
+                    player.getAge(),
+                    player.getPosition(),
+                    player.getNationality()
+            );
+            createdPlayers.add(createdPlayer);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(createdPlayers);
     }
 }
